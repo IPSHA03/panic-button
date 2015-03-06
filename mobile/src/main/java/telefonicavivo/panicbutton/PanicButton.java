@@ -6,8 +6,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.view.Window;
 import android.widget.Button;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
-/*
+
+/**
  * Panic Button class
  */
 public class PanicButton {
@@ -16,6 +23,8 @@ public class PanicButton {
     ActionBar actionbar;
     Window window;
     Button button;
+    RequestQueue queue;
+    String url ="http://192.168.10.179/";
 
     public PanicButton(Activity activity, Button button) {
         inPanic = false;
@@ -23,9 +32,10 @@ public class PanicButton {
         this.setActionbar();
         this.setWindow();
         this.setButton(button);
+        this.queue = Volley.newRequestQueue(activity);
     }
 
-    /*
+    /**
      * Get/Set Activity
      */
     private void setActivity(Activity activity) {
@@ -35,7 +45,7 @@ public class PanicButton {
         return this.activity;
     }
 
-    /*
+    /**
      * Get/Set Button
      */
     private void setButton(Button button) {
@@ -45,7 +55,7 @@ public class PanicButton {
         return this.button;
     }
 
-    /*
+    /**
      * Get/Set Actionbar
      */
     private void setActionbar() {
@@ -55,7 +65,7 @@ public class PanicButton {
         return this.actionbar;
     }
 
-    /*
+    /**
      * Get/Set Window
      */
     private void setWindow() {
@@ -65,11 +75,25 @@ public class PanicButton {
         return this.window;
     }
 
-    /*
+    /**
      * Turn on the panic button
      */
     public void on() {
         this.inPanic = true;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + "on",
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                }
+            }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        this.queue.add(stringRequest);
 
         this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_red));
         this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.red));
@@ -78,11 +102,25 @@ public class PanicButton {
         this.getButton().setText("Cancel Panic Button");
     }
 
-    /*
+    /**
      * Turn off the panic button
      */
     public void off() {
         this.inPanic = false;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + "off",
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+
+                }
+            }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        this.queue.add(stringRequest);
 
         this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_blue));
         this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.blue));
@@ -91,7 +129,7 @@ public class PanicButton {
         this.getButton().setText("Activate Panic Button");
     }
 
-    /*
+    /**
      * Check if the panic button is on
      */
     public boolean inPanic() {

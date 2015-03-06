@@ -1,6 +1,7 @@
 package telefonicavivo.panicbutton;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -8,15 +9,62 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import telefonicavivo.panicbutton.ble.FindWearableListener;
+import telefonicavivo.panicbutton.ble.Wearable;
 
 
 public class MainActivity extends Activity {
     PanicButton panic;
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.activity = this;
+
+        final Wearable kit = PanicApp.getKit();
+        kit.findWearable();
+
+        kit.setOnFindWearableListner(new FindWearableListener() {
+            @Override
+            public void connected(BluetoothDevice device) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(activity, "Conectado ao Kit Wearable", Toast.LENGTH_LONG);
+                        toast.show();
+
+                        kit.ledON("GREEN");
+                    }
+                });
+            }
+
+            @Override
+            public void disconnected() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(activity, "Disconectado do Kit Wearable", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
+            }
+
+            @Override
+            public void notFound() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast = Toast.makeText(activity, "Não foi possível encontrar o Wearable", Toast.LENGTH_LONG);
+                        toast.show();
+                    }
+                });
+            }
+        });
 
         final Button button = (Button) findViewById(R.id.panic);
         panic = new PanicButton(this, button);
@@ -26,9 +74,13 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if (panic.inPanic()) {
                     panic.off();
+                    kit.ledOFF();
+                    kit.ledON("GREEN");
 
                 } else {
                     panic.on();
+                    kit.ledOFF();
+                    kit.ledON("RED");
                 }
             }
         });
@@ -42,17 +94,20 @@ public class MainActivity extends Activity {
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
                 panic.on();
+                //kit.ledOn("RED");
 
                 return true;
 
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 panic.off();
+                //kit.lefOff();
 
                 return true;
 
             case 79:
                 if (!panic.inPanic()) {
                     panic.on();
+                    //kit.ledOn("RED");
                 }
 
                 return true;
