@@ -57,12 +57,12 @@ public class MainActivity extends Activity {
             @Override
             public boolean onLongClick(View v) {
                 if (inPanic) {
-                    panicButton.setBackgroundColor(resources.getColor(R.color.dark_gray));
+                    panicButton.setBackgroundColor(resources.getColor(R.color.red));
                     panicButton.setText(getString(R.string.activate_panic));
                     inPanic = false;
 
                 } else {
-                    panicButton.setBackgroundColor(resources.getColor(R.color.red));
+                    panicButton.setBackgroundColor(resources.getColor(R.color.dark_gray));
                     panicButton.setText(getString(R.string.cancel_panic));
                     inPanic = true;
                 }
@@ -114,16 +114,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void run() {
                     client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                    String action;
-
-                    if (inPanic) {
-                        action = "OFF";
-
-                    } else {
-                        action = "ON";
-                    }
-
-                    Wearable.MessageApi.sendMessage(client, nodeId, action, null);
+                    Wearable.MessageApi.sendMessage(client, nodeId, "panic", null);
                     client.disconnect();
                 }
             }).start();

@@ -31,20 +31,20 @@ public class MainActivity extends Activity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            Button button = (Button) findViewById(R.id.panic);
 
             if (bundle != null) {
-                String action = bundle.getString("action");
+                Log.i("Wear", Boolean.toString(panic.inPanic()));
 
-                if (action == "ON") {
-                    panic.on();
-                }
-                if (action == "OFF") {
+                if (panic.inPanic()) {
                     panic.off();
+
+                } else {
+                    panic.on();
                 }
             }
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +52,12 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         /**
-         * Register Broad cast manager
+         * Register Broadcast manager
          */
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("telefonicabeta.panicbutton.RECEIVER"));
 
+        final Button button = (Button) findViewById(R.id.panic);
+        this.panic = new PanicButton(this, button);
         this.activity = this;
 
         final Wearable kit = PanicApp.getKit();
@@ -97,9 +99,6 @@ public class MainActivity extends Activity {
                 });
             }
         });
-
-        final Button button = (Button) findViewById(R.id.panic);
-        panic = new PanicButton(this, button);
 
         //On panic button click
         panic.button.setOnClickListener(new View.OnClickListener() {
