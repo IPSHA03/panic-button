@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Panic Button</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+    <string name="activate_panic">Activate Panic</string>
+    <string name="cancel_panic">Cancel Panic</string>
 </resources>

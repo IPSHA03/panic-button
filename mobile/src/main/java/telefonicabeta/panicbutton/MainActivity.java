@@ -1,8 +1,13 @@
-package telefonicavivo.panicbutton;
+package telefonicabeta.panicbutton;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -11,18 +16,45 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import telefonicavivo.panicbutton.ble.FindWearableListener;
-import telefonicavivo.panicbutton.ble.Wearable;
+import telefonicabeta.panicbutton.ble.FindWearableListener;
+import telefonicabeta.panicbutton.ble.Wearable;
 
 
 public class MainActivity extends Activity {
     PanicButton panic;
     Activity activity;
 
+    /**
+     * Broadcast receiver for the panic button
+     */
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            Button button = (Button) findViewById(R.id.panic);
+
+            if (bundle != null) {
+                String action = bundle.getString("action");
+
+                if (action == "ON") {
+                    panic.on();
+                }
+                if (action == "OFF") {
+                    panic.off();
+                }
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         * Register Broad cast manager
+         */
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("telefonicabeta.panicbutton.RECEIVER"));
 
         this.activity = this;
 

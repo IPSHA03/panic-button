@@ -1,4 +1,4 @@
-package telefonicavivo.panicbutton.ble;
+package telefonicabeta.panicbutton.ble;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;

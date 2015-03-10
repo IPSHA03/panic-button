@@ -1,4 +1,4 @@
-package telefonicavivo.panicbutton;
+package telefonicabeta.panicbutton;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

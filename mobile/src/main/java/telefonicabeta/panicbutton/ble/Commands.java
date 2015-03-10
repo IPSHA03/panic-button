@@ -1,4 +1,4 @@
-package telefonicavivo.panicbutton.ble;
+package telefonicabeta.panicbutton.ble;
 
 import java.text.MessageFormat;
 

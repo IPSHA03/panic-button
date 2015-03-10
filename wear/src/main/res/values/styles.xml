@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+        <item name="android:colorPrimary">@color/blue</item>
+        <item name="android:colorPrimaryDark">@color/dark_blue</item>
+        <item name="android:textColorPrimary">@color/light_blue</item>
+        <item name="android:navigationBarColor">@color/blue</item>
+    </style>
+
+    <style name="Button" parent="android:Widget">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Button.Light_Blue" parent="Button">
+        <item name="android:background">@color/light_blue</item>
+    </style>
+
+    <style name="Button.Light_Blue.Big" parent="Button.Light_Blue">
+        <item name="android:padding">20dip</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Button.Red" parent="Button">
+        <item name="android:background">@color/red</item>
+    </style>
+
+    <style name="Button.Red.Big" parent="Button.Red">
+        <item name="android:padding">20dip</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+
+</resources>

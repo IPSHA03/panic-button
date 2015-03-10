@@ -1,7 +1,7 @@
-package telefonicavivo.panicbutton;
+package telefonicabeta.panicbutton;
 
 import android.app.Application;
-import telefonicavivo.panicbutton.ble.Wearable;
+import telefonicabeta.panicbutton.ble.Wearable;
 
 
 public class PanicApp extends Application {

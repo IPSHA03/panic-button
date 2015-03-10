@@ -1,4 +1,4 @@
-package telefonicavivo.panicbutton;
+package telefonicabeta.panicbutton;
 
 import android.app.ActionBar;
 import android.app.Activity;
