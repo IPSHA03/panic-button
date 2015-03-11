@@ -107,6 +107,7 @@ public class MainActivity extends Activity {
         });
 
         //On panic button click
+
         panic.button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (panic.inPanic()) {
@@ -119,6 +120,13 @@ public class MainActivity extends Activity {
                     kit.ledOFF();
                     kit.ledON("RED");
                 }
+            }
+        });
+        panic.button.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                panic.blink();
+                return true;
             }
         });
     }
