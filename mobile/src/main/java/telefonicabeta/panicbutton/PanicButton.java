@@ -24,7 +24,7 @@ public class PanicButton {
     Window window;
     Button button;
     RequestQueue queue;
-    String url ="http://192.168.10.179/";
+    String url ="http://192.168.10.171/";
 
     public PanicButton(Activity activity, Button button) {
         inPanic = false;
@@ -84,14 +84,10 @@ public class PanicButton {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url + "on",
             new Response.Listener<String>() {
                 @Override
-                public void onResponse(String response) {
-
-                }
+                public void onResponse(String response) {}
             }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
+            public void onErrorResponse(VolleyError error) {}
         });
         this.queue.add(stringRequest);
 
@@ -111,14 +107,33 @@ public class PanicButton {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url + "off",
             new Response.Listener<String>() {
                 @Override
-                public void onResponse(String response) {
-
-                }
+                public void onResponse(String response) {}
             }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
+            public void onErrorResponse(VolleyError error) {}
+        });
+        this.queue.add(stringRequest);
 
-            }
+        this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_blue));
+        this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.blue));
+        this.getActionbar().setBackgroundDrawable(new ColorDrawable(this.getActivity().getResources().getColor(R.color.blue)));
+        this.getButton().setBackgroundColor(this.getActivity().getResources().getColor(R.color.red));
+        this.getButton().setText("Activate Panic Button");
+    }
+
+    /**
+     * Blink lighst
+     */
+    public void blink() {
+        this.inPanic = false;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url + "blink",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {}
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {}
         });
         this.queue.add(stringRequest);
 

@@ -30,11 +30,16 @@ public class MainActivity extends Activity {
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
+        Bundle bundle = intent.getExtras();
 
-            if (bundle != null) {
-                Log.i("Wear", Boolean.toString(panic.inPanic()));
+        if (bundle != null) {
 
+            Log.i("Wear", Boolean.toString(panic.inPanic()));
+
+            if (bundle.getString("action").equals("blink")) {
+                panic.blink();
+
+            } else {
                 if (panic.inPanic()) {
                     panic.off();
 
@@ -42,6 +47,7 @@ public class MainActivity extends Activity {
                     panic.on();
                 }
             }
+        }
         }
     };
 

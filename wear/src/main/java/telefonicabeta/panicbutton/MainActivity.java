@@ -53,9 +53,9 @@ public class MainActivity extends Activity {
         final Button panicButton = (Button) findViewById(R.id.panicButton);
         final Resources resources = getResources();
 
-        panicButton.setOnLongClickListener(new View.OnLongClickListener() {
+        panicButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 if (inPanic) {
                     panicButton.setBackgroundColor(resources.getColor(R.color.red));
                     panicButton.setText(getString(R.string.activate_panic));
@@ -68,6 +68,13 @@ public class MainActivity extends Activity {
                 }
 
                 panic();
+            }
+        });
+
+        panicButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                panicBlink();
                 return true;
             }
         });
@@ -115,6 +122,19 @@ public class MainActivity extends Activity {
                 public void run() {
                     client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(client, nodeId, "panic", null);
+                    client.disconnect();
+                }
+            }).start();
+        }
+    }
+
+    private void panicBlink() {
+        if (nodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(client, nodeId, "blink", null);
                     client.disconnect();
                 }
             }).start();
