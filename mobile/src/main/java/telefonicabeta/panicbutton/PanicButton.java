@@ -94,7 +94,7 @@ public class PanicButton {
         this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_red));
         this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.red));
         this.getActionbar().setBackgroundDrawable(new ColorDrawable(this.getActivity().getResources().getColor(R.color.red)));
-        this.getButton().setBackgroundColor(this.getActivity().getResources().getColor(R.color.dark_gray));
+        this.getButton().setBackgroundResource(R.drawable.button_gray);
         this.getButton().setText("Cancel Panic Button");
     }
 
@@ -117,7 +117,7 @@ public class PanicButton {
         this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_blue));
         this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.blue));
         this.getActionbar().setBackgroundDrawable(new ColorDrawable(this.getActivity().getResources().getColor(R.color.blue)));
-        this.getButton().setBackgroundColor(this.getActivity().getResources().getColor(R.color.red));
+        this.getButton().setBackgroundResource(R.drawable.button_red);
         this.getButton().setText("Activate Panic Button");
     }
 
@@ -140,7 +140,7 @@ public class PanicButton {
         this.getWindow().setStatusBarColor(this.getActivity().getResources().getColor(R.color.dark_blue));
         this.getWindow().setNavigationBarColor(this.getActivity().getResources().getColor(R.color.blue));
         this.getActionbar().setBackgroundDrawable(new ColorDrawable(this.getActivity().getResources().getColor(R.color.blue)));
-        this.getButton().setBackgroundColor(this.getActivity().getResources().getColor(R.color.red));
+        this.getButton().setBackgroundResource(R.drawable.button_red);
         this.getButton().setText("Activate Panic Button");
     }
 

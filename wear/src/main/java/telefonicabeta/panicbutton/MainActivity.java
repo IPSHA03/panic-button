@@ -57,12 +57,12 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (inPanic) {
-                    panicButton.setBackgroundColor(resources.getColor(R.color.red));
+                    panicButton.setBackgroundResource(R.drawable.button_red);
                     panicButton.setText(getString(R.string.activate_panic));
                     inPanic = false;
 
                 } else {
-                    panicButton.setBackgroundColor(resources.getColor(R.color.dark_gray));
+                    panicButton.setBackgroundResource(R.drawable.button_gray);
                     panicButton.setText(getString(R.string.cancel_panic));
                     inPanic = true;
                 }

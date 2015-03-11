@@ -21,10 +21,19 @@
     </style>
 
     <style name="Button.Red" parent="Button">
-        <item name="android:background">@color/red</item>
+        <item name="android:background">@drawable/button_red</item>
     </style>
 
     <style name="Button.Red.Big" parent="Button.Red">
+        <item name="android:padding">20dip</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="Button.Gray" parent="Button">
+        <item name="android:background">@drawable/button_gray</item>
+    </style>
+
+    <style name="Button.Gray.Big" parent="Button.Gray">
         <item name="android:padding">20dip</item>
         <item name="android:textSize">22sp</item>
     </style>
