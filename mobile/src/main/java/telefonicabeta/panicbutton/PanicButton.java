@@ -26,12 +26,12 @@ public class PanicButton {
     RequestQueue queue;
     String url ="http://192.168.10.171/";
 
-    public PanicButton(Activity activity, Button button) {
+    public PanicButton(Activity activity) {
         inPanic = false;
         this.setActivity(activity);
         this.setActionbar();
         this.setWindow();
-        this.setButton(button);
+        this.setButton();
         this.queue = Volley.newRequestQueue(activity);
     }
 
@@ -48,7 +48,8 @@ public class PanicButton {
     /**
      * Get/Set Button
      */
-    private void setButton(Button button) {
+    private void setButton() {
+        Button button = (Button) getActivity().findViewById(R.id.panic);
         this.button = button;
     }
     private Button getButton() {

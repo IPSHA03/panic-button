@@ -13,19 +13,22 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 
 import telefonicabeta.panicbutton.ble.FindWearableListener;
 import telefonicabeta.panicbutton.ble.Wearable;
 
 
 public class MainActivity extends Activity {
-    PanicButton panic;
-    Activity activity;
+    private PanicButton panicButton;
+    private Activity activity;
+    private PanicMap panicMap;
 
     /**
-     * Broadcast receiver for the panic button
+     * Broadcast receiver for the panicButton button
      */
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -34,17 +37,17 @@ public class MainActivity extends Activity {
 
         if (bundle != null) {
 
-            Log.i("Wear", Boolean.toString(panic.inPanic()));
+            Log.i("Wear", Boolean.toString(panicButton.inPanic()));
 
             if (bundle.getString("action").equals("blink")) {
-                panic.blink();
+                panicButton.blink();
 
             } else {
-                if (panic.inPanic()) {
-                    panic.off();
+                if (panicButton.inPanic()) {
+                    panicButton.off();
 
                 } else {
-                    panic.on();
+                    panicButton.on();
                 }
             }
         }
@@ -57,18 +60,34 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /**
-         * Register Broadcast manager
-         */
+        // Register Broadcast manager
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("telefonicabeta.panicbutton.RECEIVER"));
 
-        final Button button = (Button) findViewById(R.id.panic);
-        this.panic = new PanicButton(this, button);
+        // Get the panicButton button in activity
         this.activity = this;
+        this.panicMap = new PanicMap(this.activity);
+        this.panicButton = new PanicButton(this.activity);
 
+        panicMap.getMap().setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (!panicButton.inPanic) {
+                    panicButton.on();
+                    panicMap.setMarkerIcon("gray");
+
+                } else {
+                    panicButton.off();
+                    panicMap.setMarkerIcon("red");
+                }
+                return true;
+            }
+        });
+
+        // Instantiate the wearable kit
         final Wearable kit = PanicApp.getKit();
         kit.findWearable();
 
+        // Set the find wearable listeners
         kit.setOnFindWearableListner(new FindWearableListener() {
             @Override
             public void connected(BluetoothDevice device) {
@@ -88,7 +107,7 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast toast = Toast.makeText(activity, "Disconectado do Kit Wearable", Toast.LENGTH_LONG);
+                        Toast toast = Toast.makeText(activity, "Desconectado do Kit Wearable", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 });
@@ -106,26 +125,28 @@ public class MainActivity extends Activity {
             }
         });
 
-        //On panic button click
-
-        panic.button.setOnClickListener(new View.OnClickListener() {
+        // On panicButton button click
+        panicButton.button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (panic.inPanic()) {
-                    panic.off();
+                if (panicButton.inPanic()) {
+                    panicButton.off();
                     kit.ledOFF();
                     kit.ledON("GREEN");
+                    panicMap.setMarkerIcon("red");
 
                 } else {
-                    panic.on();
+                    panicButton.on();
                     kit.ledOFF();
                     kit.ledON("RED");
+                    panicMap.setMarkerIcon("gray");
                 }
             }
         });
-        panic.button.setOnLongClickListener(new View.OnLongClickListener() {
+        // On panicButton button long click
+        panicButton.button.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                panic.blink();
+                panicButton.blink();
                 return true;
             }
         });
@@ -138,22 +159,17 @@ public class MainActivity extends Activity {
 
         switch (keyCode) {
             case KeyEvent.KEYCODE_VOLUME_UP:
-                panic.on();
-                //kit.ledOn("RED");
+            case 79:
+                if (!panicButton.inPanic()) {
+                    panicButton.on();
+                    //kit.ledOn("RED");
+                }
 
                 return true;
 
             case KeyEvent.KEYCODE_VOLUME_DOWN:
-                panic.off();
+                panicButton.off();
                 //kit.lefOff();
-
-                return true;
-
-            case 79:
-                if (!panic.inPanic()) {
-                    panic.on();
-                    //kit.ledOn("RED");
-                }
 
                 return true;
 
