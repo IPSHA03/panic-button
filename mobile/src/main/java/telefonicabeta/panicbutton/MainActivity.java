@@ -162,6 +162,7 @@ public class MainActivity extends Activity {
             case 79:
                 if (!panicButton.inPanic()) {
                     panicButton.on();
+                    panicMap.setMarkerIcon("gray");
                     //kit.ledOn("RED");
                 }
 
@@ -169,6 +170,7 @@ public class MainActivity extends Activity {
 
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 panicButton.off();
+                panicMap.setMarkerIcon("red");
                 //kit.lefOff();
 
                 return true;
