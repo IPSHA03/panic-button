@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     private PanicButton panicButton;
     private Activity activity;
     private PanicMap panicMap;
+    private SessionManager session;
 
     /**
      * Broadcast receiver for the panicButton button
@@ -59,6 +60,9 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        session = new SessionManager(getApplicationContext());
+        session.checkLogin();
 
         // Register Broadcast manager
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("telefonicabeta.panicbutton.RECEIVER"));
@@ -162,16 +166,12 @@ public class MainActivity extends Activity {
             case 79:
                 if (!panicButton.inPanic()) {
                     panicButton.on();
-                    panicMap.setMarkerIcon("gray");
-                    //kit.ledOn("RED");
                 }
 
                 return true;
 
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 panicButton.off();
-                panicMap.setMarkerIcon("red");
-                //kit.lefOff();
 
                 return true;
 
@@ -190,10 +190,11 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            session.logout();
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }
