@@ -1,0 +1,7 @@
+<resources>
+    <string name="title_activity_logon">Cadastre-se</string>
+
+    <!-- Strings related to logon -->
+    <string name="action_sign_on">Cadastrse-se</string>
+    <string name="name">Nome</string>
+</resources>

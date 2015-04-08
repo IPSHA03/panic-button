@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
-import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,11 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
-
-    private static final String[] DUMMY_CREDENTIALS = new String[] {
-            "vitorleal1@gmail.com:12345"
-    };
+public class LogonActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private UserLoginTask mAuthTask = null;
 
@@ -43,20 +37,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private Button mEmailSignInButton;
-    private TextView mLogonButton;
-    private SessionManager session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        session = new SessionManager(getApplicationContext());
-
-        if (session.isLoggedIn()) {
-            goToMainActivity();
-        }
+        setContentView(R.layout.activity_logon);
 
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -73,21 +58,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
         });
 
-        // Set click to the login button
-        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
-            }
-        });
-
-        // Set click to the logon button
-        mLogonButton = (TextView) findViewById(R.id.logon_button);
-        mLogonButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToLogonActivity();
             }
         });
 
@@ -133,7 +108,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
@@ -141,22 +115,25 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
             focusView.requestFocus();
-
         } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
             showProgress(true);
-            mEmailView.clearFocus();
-            mPasswordView.clearFocus();
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
         }
     }
 
     private boolean isEmailValid(String email) {
+        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
+        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
@@ -169,14 +146,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
-
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                    mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -188,20 +162,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
-
         } else {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mEmailSignInButton.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this,
-            Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-                ContactsContract.Contacts.Data.MIMETYPE + " = ?", new String[]{ContactsContract.CommonDataKinds.Email
+                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
+                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
+
+                ContactsContract.Contacts.Data.MIMETYPE +
+                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
                 .CONTENT_ITEM_TYPE},
 
                 ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
@@ -211,7 +185,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
         List<String> emails = new ArrayList<String>();
         cursor.moveToFirst();
-
         while (!cursor.isAfterLast()) {
             emails.add(cursor.getString(ProfileQuery.ADDRESS));
             cursor.moveToNext();
@@ -221,7 +194,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {}
+    public void onLoaderReset(Loader<Cursor> cursorLoader) {
+
+    }
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -233,13 +208,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         int IS_PRIMARY = 1;
     }
 
-    /**
-     * Add emails to the email autocomplete field
-     * @param emailAddressCollection
-     */
+
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(LoginActivity.this,
+                new ArrayAdapter<String>(LogonActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -268,13 +240,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
             return true;
         }
 
@@ -284,8 +249,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                session.login(mEmail);
-                goToMainActivity();
+                finish();
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -299,20 +263,5 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
         }
     }
-
-    /**
-     * Go to the main activity
-     */
-    public final void goToMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Go to the logon activity
-     */
-    public final void goToLogonActivity() {
-        Intent intent = new Intent(LoginActivity.this, LogonActivity.class);
-        startActivity(intent);
-    }
 }
+

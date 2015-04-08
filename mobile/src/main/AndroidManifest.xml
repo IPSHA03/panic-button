@@ -15,6 +15,12 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
+    <!--
+     To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
+     option is required to comply with the Google+ Sign-In developer policies
+    -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+
     <application
         android:name=".PanicApp"
         android:allowBackup="true"
@@ -32,7 +38,6 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,8 +46,12 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:label="@string/title_activity_login" >
+        </activity>
+
+        <activity
+            android:name=".LogonActivity"
+            android:label="@string/title_activity_logon">
         </activity>
 
         <service
@@ -53,6 +62,7 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>
